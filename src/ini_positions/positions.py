@@ -17,5 +17,5 @@ def generate_all_posis(grid_x = 101, grid_y = 75, linelength = 10):
 if __name__ == "__main__":
     debug = True
     if debug == True:
-        test_posis = generate_all_posis(grid_x= 11, grid_y= 7, linelength=1)
+        test_posis = generate_all_posis(grid_x= 10, grid_y= 7, linelength=1)
         print(test_posis)
