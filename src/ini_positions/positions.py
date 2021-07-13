@@ -1,5 +1,4 @@
 import math
-
 from src.common.process_basic_data_structure import get_diff_between_2_lists
 
 
