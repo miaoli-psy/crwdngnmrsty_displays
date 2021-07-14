@@ -1,6 +1,7 @@
 import math
 import matplotlib.pyplot as plt
 from src.common.process_basic_data_structure import get_diff_between_2_lists
+from itertools import combinations
 
 
 class Positions:
@@ -23,24 +24,22 @@ class Positions:
                 new_y = start_y + y * self.line_length
                 positions.append((new_x, new_y))
         try:
-            positions.remove((0, 0))  # remove the center
+            positions.remove((0, 0))
         except ValueError:
             pass
         return positions
 
-    def fovea_posis(self):
-        return [posi for posi in self.all_posis if math.sqrt((posi[0] ** 2) + (posi[1] ** 2)) < self.fovea_radius]
-
     def get_all_posis_remove_fovea(self):
-        return get_diff_between_2_lists(self.all_posis, self.fovea_posis())
+        to_remove = [posi for posi in self.all_posis if math.sqrt((posi[0] ** 2) + (posi[1] ** 2)) < self.fovea_radius]
+        return get_diff_between_2_lists(self.all_posis, to_remove)
 
 
 if __name__ == "__main__":
     debug = True
     if debug:
-        test_posis = Positions(grid_x = 101, grid_y = 75, line_length = 10, fovea_radius = 100)
-        fovea = test_posis.fovea_posis()
+        test_posis = Positions()
         all = test_posis.all_posis_no_fovea
         ax = plt.subplot()
         for posi in all:
             ax.plot(posi[0], posi[1], marker = ".", markersize = 1)
+        plt.show()
