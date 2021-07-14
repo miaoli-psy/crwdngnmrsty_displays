@@ -26,7 +26,9 @@ class Ellipse:
                                  origin = "centroid")
         return ellipse_polygon
 
-    def plot_ellipse_polygon(self, axes_lim = [-20, 20]):
+    def plot_ellipse_polygon(self, axes_lim = None):
+        if axes_lim is None:
+            axes_lim = [-20, 20]
         patch = PolygonPatch(self.get_polygon())
         ax = plt.subplot()
         ax.add_artist(patch)
