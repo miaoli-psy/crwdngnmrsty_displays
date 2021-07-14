@@ -66,6 +66,12 @@ class Ellipse:
 
 
 if __name__ == '__main__':
-    debug = False
+    debug = True
     if debug:
         e = Ellipse((10, 17.32), 2, 5, Orientation.Radial)
+        p1 = Ellipse((-17, 10), 6, 2, Orientation.Both)
+        p2 = Ellipse((-15, 10), 3, 8, Orientation.Both)
+        print(p1.is_intersect(p2))
+        e.plot_ellipse_polygon()
+        p1.plot_ellipse_polygon()
+        p2.plot_ellipse_polygon()
