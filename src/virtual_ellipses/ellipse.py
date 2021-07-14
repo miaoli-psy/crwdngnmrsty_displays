@@ -61,14 +61,11 @@ class Ellipse:
         ax.set_aspect('equal', 'box')
         plt.show()
 
-    # def get_intersects(self, other_polygon):
-    #
-    #     return self.get_polygon_radial().intersection(other_polygon.get_polygon_radial())
+    def is_intersect(self, other_ellipse):
+        return not self.polygon.intersection(other_ellipse.polygon).is_empty
 
 
 if __name__ == '__main__':
     debug = False
     if debug:
-        e = Ellipse((10, 17.32), 2, 5)
-        e.get_radial_angle()
-        e.plot_ellipse_polygon(angle = "tangential")
+        e = Ellipse((10, 17.32), 2, 5, Orientation.Radial)
