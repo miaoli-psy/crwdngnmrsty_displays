@@ -64,14 +64,26 @@ class Ellipse:
     def is_intersect(self, other_ellipse):
         return not self.polygon.intersection(other_ellipse.polygon).is_empty
 
+    def is_intersect_multi_polygon(self, polygon_list):
+        for polygon in polygon_list:
+            intersect = self.is_intersect(polygon)
+            if intersect:
+                return True
+        return False
+
 
 if __name__ == '__main__':
     debug = True
     if debug:
         e = Ellipse((10, 17.32), 2, 5, Orientation.Radial)
-        p1 = Ellipse((-17, 10), 6, 2, Orientation.Both)
-        p2 = Ellipse((-15, 10), 3, 8, Orientation.Both)
+        p1 = Ellipse((-10, 10), 6, 2, Orientation.Both)
+        p2 = Ellipse((-3, 5), 3, 8, Orientation.Tangential)
+        p3 = Ellipse((15, -10), 3, 8, Orientation.Both)
+
         print(p1.is_intersect(p2))
         e.plot_ellipse_polygon()
         p1.plot_ellipse_polygon()
         p2.plot_ellipse_polygon()
+        p3.plot_ellipse_polygon()
+        print(p1.is_intersect_multi_polygon([e, p2, p3]))
+
