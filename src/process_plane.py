@@ -29,6 +29,9 @@ def get_display(winsize = 0.6, orientation = Orientation.Both):
                           orientation = orientation)
     e_polygone_list = [ini_ellipse]
 
+    # shuffle the position list
+    random.shuffle(full_posi_list)
+
     for posi in full_posi_list:
         elipse = Ellipse(ellipse_center_coordinate = posi,
                          ka = get_major_axis(posi),
@@ -47,4 +50,4 @@ if __name__ == '__main__':
         posi = get_random_posi(list)
         a = get_major_axis(posi)
         posis = get_display()
-        drawEllipses(posis, ka = 0.25, kb = 0.1, ellipseColor = "white")
+        drawEllipse_full(posis, [], ka = 0.25, kb = 0.1, ellipseColor_t = "white", ellipseColor_r = "white")
