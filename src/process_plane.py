@@ -1,6 +1,6 @@
 import random
 from ellipse import Ellipse, Orientation
-from positions import Positions
+from allpositions import AllPositions
 from scipy.spatial import distance
 
 from src.draw_displays import drawEllipse_full, drawEllipses
@@ -19,7 +19,7 @@ def get_minor_axis(ellipse_center_posi: tuple, weight = 0.1) -> float:
 
 
 def get_display(winsize = 0.6, orientation = Orientation.Both):
-    full_posi_list = Positions().get_all_posi_in_winsize(winsize = winsize)
+    full_posi_list = AllPositions().get_all_posi_in_winsize(winsize = winsize)
     ini_posi = get_random_posi(full_posi_list)
 
     taken_posi_list = [ini_posi]
