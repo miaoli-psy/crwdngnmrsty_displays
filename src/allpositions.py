@@ -4,7 +4,7 @@ from src.common.process_basic_data_structure import get_diff_between_2_lists
 from itertools import combinations
 
 
-class Positions:
+class AllPositions:
     def __init__(self, grid_x = 101, grid_y = 75, line_length = 10, fovea_radius = 100):
         self.grid_x = grid_x
         self.grid_y = grid_y
@@ -51,7 +51,7 @@ class Positions:
 if __name__ == "__main__":
     debug = True
     if debug:
-        test_posis = Positions()
+        test_posis = AllPositions()
         all = test_posis.all_posis_no_fovea
         ax = plt.subplot()
         for posi in all:
