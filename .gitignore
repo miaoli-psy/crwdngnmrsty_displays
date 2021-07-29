@@ -134,6 +134,7 @@ dmypy.json
 *.xlsx
 *.docx
 *.png
+*.svg
 # forders
 output_display/
 archive/
