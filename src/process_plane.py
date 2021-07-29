@@ -3,6 +3,7 @@ from ellipse import Ellipse, Orientation
 from allpositions import AllPositions
 from scipy.spatial import distance
 from shapely.geometry import Point
+from shapely import affinity
 
 from src.common.process_basic_data_structure import get_random_item_from_list
 from src.common.process_polygon import get_intersect_poly, get_random_point_in_polygon, plot_polygon
@@ -61,29 +62,47 @@ def get_close_to_fovea_posi(posi):
                 return point
 
 
+def get_far_from_fovea_posi(posi):
+    point = get_close_to_fovea_posi(posi)
+    return affinity.rotate(point, 180, origin = Point(posi))
+
+
+def get_posi_in_tan_area_a(posi):
+    # 如posi在第一象限，此点靠近x轴（逆时针转90度）
+    point = get_close_to_fovea_posi(posi)
+    return affinity.rotate(point, 90, origin = Point(posi))
+
+
+def get_posi_in_tan_area_b(posi):
+    point = get_close_to_fovea_posi(posi)
+    return affinity.rotate(point, 270, origin = Point(posi))
+
+
 if __name__ == '__main__':
     debug = True
     if debug:
         list_t = [(-20, 20), (35, 130), (-45, 50), (-89, -120)]
         posi = get_random_item_from_list(list_t)
-        # a = __get_major_axis(posi)
 
         curr_winsize = 0.6
         all_posi_object = AllPositions(grid_x = 101, grid_y = 75, line_length = 10, fovea_radius = 100)
         full_posi_list = all_posi_object.get_all_posi_in_winsize(winsize = curr_winsize)
         posis = get_display(full_posi_list, protect_zone_ori = Orientation.Both)
-        # drawEllipse_full(posis, [], ka = 0.25, kb = 0.1, ellipseColor_t = "white", ellipseColor_r = "white")
-        #
-        # lst = list()
-        # for i in range(0, 2):
-        #     lst.append(get_display(full_posi_list, protect_zone_ori = Orientation.Both))
+        drawEllipse_full(posis, [], ka = 0.25, kb = 0.1, ellipseColor_t = "white", ellipseColor_r = "white")
+
+        lst = list()
+        for i in range(0, 2):
+            lst.append(get_display(full_posi_list, protect_zone_ori = Orientation.Both))
 
         extra_posi_list = list()
 
         for posi in posis:
-            extra_posi_list.append(get_close_to_fovea_posi(posi))
+            point = get_close_to_fovea_posi(posi)
+            extra_posi_list.append(list(point.coords)[0])
 
-        # test_e_poly = Ellipse(posi, __get_minor_axis(posi), __get_major_axis(posi), orientation = Orientation.Radial).polygon
-        # toplot = [test_e_poly, get_close_to_fovea_posi(posi).buffer(0.2)]
-        #
-        # plot_polygon(toplot, axes_lim = [-150, 150])
+        test_e_poly = Ellipse(posi, __get_minor_axis(posi), __get_major_axis(posi),
+                              orientation = Orientation.Radial).polygon
+        toplot = [test_e_poly, get_posi_in_tan_area_a(posi).buffer(0.5)]
+
+        plot_polygon(toplot, axes_lim = [-150, 150])
+
