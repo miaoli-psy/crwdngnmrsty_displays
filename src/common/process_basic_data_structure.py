@@ -11,4 +11,5 @@ def cal_average(lst):
 
 
 def get_random_item_from_list(posilist: list) -> tuple:
-    return random.choice(posilist)
+    random_index = random.randint(0, len(posilist)-1)
+    return posilist[random_index]
