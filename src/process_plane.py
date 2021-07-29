@@ -15,7 +15,7 @@ def __get_minor_axis(ellipse_center_posi: tuple, weight = 0.1) -> float:
     return weight * distance.euclidean(ellipse_center_posi, (0, 0))
 
 
-def get_display(full_posi_list: list, winsize = 0.6, protect_zone_ori = Orientation.Both):
+def get_display(full_posi_list: list, protect_zone_ori = Orientation.Both):
 
     ini_posi = get_random_item_from_list(full_posi_list)
 
@@ -50,9 +50,9 @@ if __name__ == '__main__':
         curr_winsize = 0.6
         all_posi_object = AllPositions(grid_x = 101, grid_y = 75, line_length = 10, fovea_radius = 100)
         full_posi_list = all_posi_object.get_all_posi_in_winsize(winsize = curr_winsize)
-        posis = get_display(full_posi_list, winsize = 0.6, protect_zone_ori = Orientation.Both)
+        posis = get_display(full_posi_list, protect_zone_ori = Orientation.Both)
         drawEllipse_full(posis, [], ka = 0.25, kb = 0.1, ellipseColor_t = "white", ellipseColor_r = "white")
 
         lst = list()
         for i in range(0, 2):
-            lst.append(get_display(full_posi_list, winsize = curr_winsize, protect_zone_ori = Orientation.Both))
+            lst.append(get_display(full_posi_list, protect_zone_ori = Orientation.Both))
