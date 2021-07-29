@@ -1,10 +1,10 @@
 from math import atan2, degrees
-import matplotlib.pyplot as plt
 from shapely.geometry import Point
 from shapely.affinity import scale, rotate
-from descartes import PolygonPatch
 from enum import Enum
 from shapely.ops import unary_union
+
+from src.common.process_polygon import get_random_point_in_polygon, plot_polygon, get_intersect_poly
 
 
 class Orientation(Enum):
@@ -50,17 +50,6 @@ class Ellipse:
         elif self.orientation == Orientation.Both:
             return unary_union([ellipse_polygon_radial, ellipse_polygon_tangential])
 
-    def plot_ellipse_polygon(self, axes_lim = None):
-        if axes_lim is None:
-            axes_lim = [-20, 20]
-        patch = PolygonPatch(self.get_polygon())
-        ax = plt.subplot()
-        ax.add_artist(patch)
-        ax.set_xlim(axes_lim)
-        ax.set_ylim(axes_lim)
-        ax.set_aspect('equal', 'box')
-        plt.show()
-
     def is_intersect(self, other_ellipse):
         return not self.polygon.intersection(other_ellipse.polygon).is_empty
 
@@ -76,14 +65,17 @@ if __name__ == '__main__':
     debug = True
     if debug:
         e = Ellipse((10, 17.32), 2, 5, Orientation.Radial)
+        e2 = Ellipse((10, 17.32), 2, 5, Orientation.Tangential)
         p1 = Ellipse((-10, 10), 6, 2, Orientation.Both)
         p2 = Ellipse((-3, 5), 3, 8, Orientation.Tangential)
         p3 = Ellipse((15, -10), 3, 8, Orientation.Both)
 
+        intersect = get_intersect_poly(e.polygon, e2.polygon)
+
         print(p1.is_intersect(p2))
-        e.plot_ellipse_polygon()
-        p1.plot_ellipse_polygon()
-        p2.plot_ellipse_polygon()
-        p3.plot_ellipse_polygon()
         print(p1.is_intersect_multi_polygon([e, p2, p3]))
 
+        mypoint = get_random_point_in_polygon(e.polygon)
+
+        plot_polygon([e.polygon, e2.polygon, mypoint.buffer(0.2)])
+        plot_polygon([intersect])
