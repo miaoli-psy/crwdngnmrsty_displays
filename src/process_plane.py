@@ -2,8 +2,10 @@ import random
 from ellipse import Ellipse, Orientation
 from allpositions import AllPositions
 from scipy.spatial import distance
+from shapely.geometry import Point
 
 from src.common.process_basic_data_structure import get_random_item_from_list
+from src.common.process_polygon import get_intersect_poly, get_random_point_in_polygon, plot_polygon
 from src.draw_displays import drawEllipse_full
 
 
@@ -16,7 +18,6 @@ def __get_minor_axis(ellipse_center_posi: tuple, weight = 0.1) -> float:
 
 
 def get_display(full_posi_list: list, protect_zone_ori = Orientation.Both):
-
     ini_posi = get_random_item_from_list(full_posi_list)
 
     taken_posi_list = [ini_posi]
@@ -40,19 +41,49 @@ def get_display(full_posi_list: list, protect_zone_ori = Orientation.Both):
     return taken_posi_list
 
 
+def get_close_to_fovea_posi(posi):
+    radial_ellipse_poly = Ellipse(ellipse_center_coordinate = posi,
+                                  ka = __get_major_axis(posi),
+                                  kb = __get_minor_axis(posi),
+                                  orientation = Orientation.Radial).polygon
+
+    tangential_ellipse_poly = Ellipse(ellipse_center_coordinate = posi,
+                                      ka = __get_major_axis(posi),
+                                      kb = __get_minor_axis(posi),
+                                      orientation = Orientation.Tangential).polygon
+
+    intersect = get_intersect_poly(radial_ellipse_poly, tangential_ellipse_poly)
+
+    while True:
+        point = get_random_point_in_polygon(radial_ellipse_poly)
+        if not point.within(intersect):
+            if point.distance(Point(0, 0)) < Point(posi).distance(Point(0, 0)):
+                return point
+
+
 if __name__ == '__main__':
     debug = True
     if debug:
         list_t = [(-20, 20), (35, 130), (-45, 50), (-89, -120)]
         posi = get_random_item_from_list(list_t)
-        a = __get_major_axis(posi)
+        # a = __get_major_axis(posi)
 
         curr_winsize = 0.6
         all_posi_object = AllPositions(grid_x = 101, grid_y = 75, line_length = 10, fovea_radius = 100)
         full_posi_list = all_posi_object.get_all_posi_in_winsize(winsize = curr_winsize)
         posis = get_display(full_posi_list, protect_zone_ori = Orientation.Both)
-        drawEllipse_full(posis, [], ka = 0.25, kb = 0.1, ellipseColor_t = "white", ellipseColor_r = "white")
+        # drawEllipse_full(posis, [], ka = 0.25, kb = 0.1, ellipseColor_t = "white", ellipseColor_r = "white")
+        #
+        # lst = list()
+        # for i in range(0, 2):
+        #     lst.append(get_display(full_posi_list, protect_zone_ori = Orientation.Both))
 
-        lst = list()
-        for i in range(0, 2):
-            lst.append(get_display(full_posi_list, protect_zone_ori = Orientation.Both))
+        extra_posi_list = list()
+
+        for posi in posis:
+            extra_posi_list.append(get_close_to_fovea_posi(posi))
+
+        # test_e_poly = Ellipse(posi, __get_minor_axis(posi), __get_major_axis(posi), orientation = Orientation.Radial).polygon
+        # toplot = [test_e_poly, get_close_to_fovea_posi(posi).buffer(0.2)]
+        #
+        # plot_polygon(toplot, axes_lim = [-150, 150])
