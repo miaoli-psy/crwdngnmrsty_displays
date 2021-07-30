@@ -27,3 +27,7 @@ def plot_polygon(polygonlist, axes_lim = None):
 
 def get_intersect_poly(poly1, poly2):
     return poly1.intersection(poly2)
+
+
+def polypoint_to_coords(point):
+    return list(point.coords)[0]
