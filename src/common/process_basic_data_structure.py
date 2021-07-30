@@ -19,3 +19,4 @@ def random_split_list(inputlist, weight = 0.5):
     random.shuffle(inputlist)
     len_lst1 = int(weight * len(inputlist))
     return inputlist[0: len_lst1], inputlist[len_lst1:]
+
