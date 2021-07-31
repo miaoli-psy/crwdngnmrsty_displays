@@ -60,31 +60,29 @@ def get_no_extra_posi_base(based_posis, percent_pairs):
     return no_extra_posi_base
 
 
-def gen_display(based_posis, protect_zone_ori = "radial", percent_pairs = 1):
+def gen_display_vaired_paris_n(based_posis, percent_pairs = 1, protect_zone_ori = "radial"):
     if percent_pairs == 1:
         return based_posis, get_one_extra_random_posis(based_posis, ori = protect_zone_ori)
+    else:
+        extra_posis = list()
+        # single based disc posis 只有中间一个点
+        no_extra_posi_base = get_no_extra_posi_base(based_posis = based_posis, percent_pairs = percent_pairs)
+        # other posis (2 extra posis, and 1 extra posi)
+        rest_posis = get_diff_between_2_lists(based_posis, no_extra_posi_base)
+        # the number of 2 extra posis == no extra posis
+        two_extra_posis_base = random.sample(rest_posis, len(no_extra_posi_base))
+        # get 2 extra posis list
+        two_extra_posis_list = get_two_extra_posis(based_posis = two_extra_posis_base, ori = protect_zone_ori)
+        # get 1 extra posis list
+        one_extra_posi_base = get_diff_between_2_lists(rest_posis, two_extra_posis_base)
+        extra_posis_list = get_one_extra_random_posis(based_posis = one_extra_posi_base, ori = protect_zone_ori)
+        extra_posis = extra_posis + extra_posis_list + two_extra_posis_list
 
-
-def gen_display_vaired_paris_n(based_posis, percent_pairs, protect_zone_ori = "radial"):
-    extra_posis = list()
-    # single based disc posis 只有中间一个点
-    no_extra_posi_base = get_no_extra_posi_base(based_posis = based_posis, percent_pairs = percent_pairs)
-    # other posis (2 extra posis, and 1 extra posi)
-    rest_posis = get_diff_between_2_lists(based_posis, no_extra_posi_base)
-    # the number of 2 extra posis == no extra posis
-    two_extra_posis_base = random.sample(rest_posis, len(no_extra_posi_base))
-    # get 2 extra posis list
-    two_extra_posis_list = get_two_extra_posis(based_posis = two_extra_posis_base, ori = protect_zone_ori)
-    # get 1 extra posis list
-    one_extra_posi_base = get_diff_between_2_lists(rest_posis, two_extra_posis_base)
-    extra_posis_list = get_one_extra_random_posis(based_posis = one_extra_posi_base, ori = protect_zone_ori)
-    extra_posis = extra_posis + extra_posis_list + two_extra_posis_list
-
-    return based_posis, extra_posis
+        return based_posis, extra_posis
 
 
 if __name__ == '__main__':
-    based_posis = get_display(full_posi_list, protect_zone_ori = protect_zone_ori)
-    display = gen_display_vaired_paris_n(based_posis, percent_pairs = 0, protect_zone_ori = "radial")
+    all_based_posis = get_display(full_posi_list, protect_zone_ori = protect_zone_ori)
+    display = gen_display_vaired_paris_n(all_based_posis, percent_pairs = 1, protect_zone_ori = "radial")
     drawEllipse_full(display[0], display[1], ka = 0.25, kb = 0.1, ellipseColor_t = "white", ellipseColor_r = "white")
     draw_disc_only(display[0] + display[1])
