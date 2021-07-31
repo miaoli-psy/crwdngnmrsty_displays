@@ -57,11 +57,15 @@ def get_no_extra_posi_base(based_posis, percent_pairs):
         no_extra_posi_base = random_split_list(based_posis, weight = 0.25)[0]
     elif percent_pairs == 0:
         no_extra_posi_base = random_split_list(based_posis, weight = 0.5)[0]
+    else:
+        no_extra_posi_base = random_split_list(based_posis, weight = 0.25)[0]
+        print(f"warning, percent_pairs == {percent_pairs} is not support, generate displays with 50% pairs. Only "
+              f"support 0, 0.5, 0.75")
     return no_extra_posi_base
 
 
-def gen_display_vaired_paris_n(based_posis, percent_pairs = 1, protect_zone_ori = "radial"):
-    if percent_pairs == 1:
+def gen_display_vaired_paris_n(based_posis, percent_pairs = 1.0, protect_zone_ori = "radial"):
+    if percent_pairs == 1.0:
         return based_posis, get_one_extra_random_posis(based_posis, ori = protect_zone_ori)
     else:
         extra_posis = list()
