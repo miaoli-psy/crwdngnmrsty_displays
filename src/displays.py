@@ -2,7 +2,7 @@ from allpositions import AllPositions
 from ellipse import Orientation
 from src.common.process_basic_data_structure import random_split_list, get_diff_between_2_lists
 from src.common.process_polygon import polypoint_to_coords
-from src.draw_displays import drawEllipse_full
+from src.draw_displays import drawEllipse_full, draw_disc_only
 from src.process_plane import get_display, get_close_to_fovea_posi, get_far_from_fovea_posi, get_posi_in_tan_area_a, \
     get_posi_in_tan_area_b
 import random
@@ -50,14 +50,25 @@ def get_two_extra_posis(based_posis, ori = "radial"):
     return extra_posis
 
 
-def gen_display_full_pairs(based_posis, protect_zone_ori = "radial"):
-    return based_posis, get_one_extra_random_posis(based_posis, ori = protect_zone_ori)
+def get_no_extra_posi_base(based_posis, percent_pairs):
+    if percent_pairs == 0.75:
+        no_extra_posi_base = random_split_list(based_posis, weight = 0.125)[0]
+    elif percent_pairs == 0.5:
+        no_extra_posi_base = random_split_list(based_posis, weight = 0.25)[0]
+    elif percent_pairs == 0:
+        no_extra_posi_base = random_split_list(based_posis, weight = 0.5)[0]
+    return no_extra_posi_base
 
 
-def gen_display_75p_paris(based_posis, protect_zone_ori = "radial"):
+def gen_display(based_posis, protect_zone_ori = "radial", percent_pairs = 1):
+    if percent_pairs == 1:
+        return based_posis, get_one_extra_random_posis(based_posis, ori = protect_zone_ori)
+
+
+def gen_display_vaired_paris_n(based_posis, percent_pairs, protect_zone_ori = "radial"):
     extra_posis = list()
     # single based disc posis 只有中间一个点
-    no_extra_posi_base = random_split_list(based_posis, weight = 0.125)[0]
+    no_extra_posi_base = get_no_extra_posi_base(based_posis = based_posis, percent_pairs = percent_pairs)
     # other posis (2 extra posis, and 1 extra posi)
     rest_posis = get_diff_between_2_lists(based_posis, no_extra_posi_base)
     # the number of 2 extra posis == no extra posis
@@ -74,5 +85,6 @@ def gen_display_75p_paris(based_posis, protect_zone_ori = "radial"):
 
 if __name__ == '__main__':
     based_posis = get_display(full_posi_list, protect_zone_ori = protect_zone_ori)
-    display = gen_display_75p_paris(based_posis, protect_zone_ori = "radial")
+    display = gen_display_vaired_paris_n(based_posis, percent_pairs = 0, protect_zone_ori = "radial")
     drawEllipse_full(display[0], display[1], ka = 0.25, kb = 0.1, ellipseColor_t = "white", ellipseColor_r = "white")
+    draw_disc_only(display[0] + display[1])
