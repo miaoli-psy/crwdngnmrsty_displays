@@ -7,14 +7,6 @@ from src.process_plane import get_display, get_close_to_fovea_posi, get_far_from
     get_posi_in_tan_area_b
 import random
 
-curr_winsize = 0.6
-protect_zone_ori = Orientation.Both
-protect_zone_type = "tangential"
-percent_pairs = 0.5
-
-all_posis_object = AllPositions(grid_x = 101, grid_y = 75, line_length = 10, fovea_radius = 100)
-full_posi_list = all_posis_object.get_all_posi_in_winsize(winsize = curr_winsize)
-
 
 def get_one_extra_random_posis(based_posis, ori = "radial"):
     extra_posis = list()
@@ -86,6 +78,12 @@ def gen_display_vaired_paris_n(based_posis, percent_pairs = 1.0, protect_zone_or
 
 
 if __name__ == '__main__':
+    curr_winsize = 0.6
+    protect_zone_ori = Orientation.Both
+    protect_zone_type = "tangential"
+    percent_pairs = 0.5
+    all_posis_object = AllPositions(grid_x = 101, grid_y = 75, line_length = 10, fovea_radius = 100)
+    full_posi_list = all_posis_object.get_all_posi_in_winsize(winsize = curr_winsize)
     all_based_posis = get_display(full_posi_list, protect_zone_ori = protect_zone_ori)
     display = gen_display_vaired_paris_n(all_based_posis, percent_pairs = 1, protect_zone_ori = "radial")
     drawEllipse_full(display[0], display[1], ka = 0.25, kb = 0.1, ellipseColor_t = "white", ellipseColor_r = "white")
