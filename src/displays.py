@@ -56,9 +56,9 @@ def get_no_extra_posi_base(based_posis, percent_pairs):
     return no_extra_posi_base
 
 
-def generate_display_direct_add_extra_discs(based_posis, percent_pairs = 1.0, protect_zone_ori = "radial"):
+def generate_display_direct_add_extra_discs(based_posis, percent_pairs = 1.0, add_discs_ori = "radial"):
     if percent_pairs == 1.0:
-        return based_posis, get_one_extra_random_posis(based_posis, ori = protect_zone_ori)
+        return based_posis, get_one_extra_random_posis(based_posis, ori = add_discs_ori)
     else:
         extra_posis = list()
         # single based disc posis 只有中间一个点
@@ -68,17 +68,17 @@ def generate_display_direct_add_extra_discs(based_posis, percent_pairs = 1.0, pr
         # the number of 2 extra posis == no extra posis
         two_extra_posis_base = random.sample(rest_posis, len(no_extra_posi_base))
         # get 2 extra posis list
-        two_extra_posis_list = get_two_extra_posis(based_posis = two_extra_posis_base, ori = protect_zone_ori)
+        two_extra_posis_list = get_two_extra_posis(based_posis = two_extra_posis_base, ori = add_discs_ori)
         # get 1 extra posis list
         one_extra_posi_base = get_diff_between_2_lists(rest_posis, two_extra_posis_base)
-        extra_posis_list = get_one_extra_random_posis(based_posis = one_extra_posi_base, ori = protect_zone_ori)
+        extra_posis_list = get_one_extra_random_posis(based_posis = one_extra_posi_base, ori = add_discs_ori)
         extra_posis = extra_posis + extra_posis_list + two_extra_posis_list
 
         return based_posis, extra_posis
 
 
 if __name__ == '__main__':
-    debug = False
+    debug = True
     if debug:
         curr_winsize = 0.6
         protect_zone_ori = Orientation.Both
@@ -87,6 +87,6 @@ if __name__ == '__main__':
         all_posis_object = AllPositions(grid_x = 101, grid_y = 75, line_length = 10, fovea_radius = 100)
         full_posi_list = all_posis_object.get_all_posi_in_winsize(winsize = curr_winsize)
         all_based_posis = get_display(full_posi_list, protect_zone_ori = protect_zone_ori)
-        display = generate_display_direct_add_extra_discs(all_based_posis, percent_pairs = 1, protect_zone_ori = "radial")
+        display = generate_display_direct_add_extra_discs(all_based_posis, percent_pairs = 1, add_discs_ori = "tangential")
         drawEllipse_full(display[0], display[1], ka = 0.25, kb = 0.1, ellipseColor_t = "white", ellipseColor_r = "white")
         draw_disc_only(display[0] + display[1])
