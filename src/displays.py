@@ -47,12 +47,14 @@ def get_no_extra_posi_base(based_posis, percent_pairs):
         no_extra_posi_base = random_split_list(based_posis, weight = 0.125)[0]
     elif percent_pairs == 0.5:
         no_extra_posi_base = random_split_list(based_posis, weight = 0.25)[0]
+    elif percent_pairs == 0.25:
+        no_extra_posi_base = random_split_list(based_posis, weight = 0.375)[0]
     elif percent_pairs == 0:
         no_extra_posi_base = random_split_list(based_posis, weight = 0.5)[0]
     else:
         no_extra_posi_base = random_split_list(based_posis, weight = 0.25)[0]
         print(f"warning, percent_pairs == {percent_pairs} is not support, generate displays with 50% pairs. Only "
-              f"support 0, 0.5, 0.75")
+              f"support 0, 0.25，0.5, 0.75")
     return no_extra_posi_base
 
 
@@ -80,13 +82,13 @@ def generate_display_direct_add_extra_discs(based_posis, percent_pairs = 1.0, ad
 if __name__ == '__main__':
     debug = True
     if debug:
-        curr_winsize = 0.6
+        curr_winsize = 0.3
         protect_zone_ori = Orientation.Both
         protect_zone_type = "tangential"
-        percent_pairs = 0.5
+        percent_pairs = 1
         all_posis_object = AllPositions(grid_x = 101, grid_y = 75, line_length = 10, fovea_radius = 100)
         full_posi_list = all_posis_object.get_all_posi_in_winsize(winsize = curr_winsize)
         all_based_posis = get_display(full_posi_list, protect_zone_ori = protect_zone_ori)
-        display = generate_display_direct_add_extra_discs(all_based_posis, percent_pairs = 1, add_discs_ori = "tangential")
+        display = generate_display_direct_add_extra_discs(all_based_posis, percent_pairs = percent_pairs, add_discs_ori = protect_zone_type)
         drawEllipse_full(display[0], display[1], ka = 0.25, kb = 0.1, ellipseColor_t = "white", ellipseColor_r = "white")
         draw_disc_only(display[0] + display[1])
