@@ -65,7 +65,7 @@ def drawEllipse_full(e_posi, extra_posi, ka, kb, ellipseColor_r = 'orangered', e
     # plt.show()
     for dot1 in extra_posi:
         plt.plot(dot1[0], dot1[1], color = extra_disc_color, marker = 'o', markersize = 2)
-    plt.plot(0, 0, color = 'k', marker = '+', markersize = 4)
+    plt.plot(0, 0, color = 'red', marker = '+', markersize = 4)
     # plt.show()
     # ax.set_xlim([-800, 800])
     # ax.set_ylim([-500, 500])
@@ -127,7 +127,7 @@ def drawEllipses(posi, ka, kb, ellipseColor, ellipsetransp = 0.5, extra_posi = [
         for dot in extra_posi:
             plt.plot(dot[0], dot[1], color = extra_disc_color, marker = 'o', markersize = 2)
 
-    plt.plot(0, 0, color = 'k', marker = '+', markersize = 4)
+    plt.plot(0, 0, color = 'red', marker = '+', markersize = 4)
 
     # set x,y lim
     ax.set_xlim([-400, 400])
@@ -186,7 +186,7 @@ def drawEllipses_homo(posi, ka, kb, ellipseColor, ellipsetransp = 0.5, extra_pos
         for dot in extra_posi:
             plt.plot(dot[0], dot[1], color = extra_disc_color, marker = 'o', markersize = 2)
 
-    plt.plot(0, 0, color = 'k', marker = '+', markersize = 4)
+    plt.plot(0, 0, color = 'red', marker = '+', markersize = 4)
 
     # set x,y lim
     ax.set_xlim([-400, 400])
@@ -205,20 +205,18 @@ def drawEllipses_homo(posi, ka, kb, ellipseColor, ellipsetransp = 0.5, extra_pos
     fig.savefig('e%s.svg' % (str(posi)[0:15]), bbox_inches = 'tight', pad_inches = 0)
 
 
-def draw_disc_only(e_posi, contrast = False):
+def draw_disc_only(e_posi_base, e_posi_extra, contrast = False):
     fig, ax = plt.subplots(subplot_kw = {'aspect': 'equal'}, figsize = (4, 3))
     if contrast:
-        white_dots = select_random_half(e_posi)
-        black_dots = get_diff_between_2_lists(e_posi, white_dots)
-        for dot in black_dots:
+        for dot in e_posi_base:
             plt.plot(dot[0], dot[1], color = 'k', marker = 'o', markersize = 2)
-        for dot in white_dots:
+        for dot in e_posi_extra:
             plt.plot(dot[0], dot[1], color = 'white', marker = 'o', markersize = 2)
     else:
-        for dot in e_posi:
+        for dot in e_posi_base + e_posi_extra:
             plt.plot(dot[0], dot[1], color = 'k', marker = 'o', markersize = 2)
 
-    plt.plot(0, 0, color = 'k', marker = '+', markersize = 4)
+    plt.plot(0, 0, color = 'red', marker = '+', markersize = 4)
 
     # set x,y lim
     ax.set_xlim([-400, 400])
@@ -235,7 +233,7 @@ def draw_disc_only(e_posi, contrast = False):
     ax.patch.set_facecolor('lightgray')
     plt.show()
 
-    fig.savefig('disc%s.svg' % (str(e_posi)[0:15]), bbox_inches = 'tight', pad_inches = 0)
+    fig.savefig('disc%s.svg' % (str(e_posi_base)[0:15]), bbox_inches = 'tight', pad_inches = 0)
 
 
 def drawEllipse_crowding(e_posi, black_disc_posi, red_disc_posi, crowding_posi, ka, kb, ellipseColor_r = 'royalblue',
@@ -288,7 +286,7 @@ def drawEllipse_crowding(e_posi, black_disc_posi, red_disc_posi, crowding_posi, 
         ax.add_patch(
                 plt.Circle((0, 0), distance.euclidean(posi, (0, 0)), alpha = 0.5, linestyle = "--", fill = False))
     # fixation
-    plt.plot(0, 0, color = 'k', marker = '+', markersize = 10)
+    plt.plot(0, 0, color = 'red', marker = '+', markersize = 10)
 
     # x, y limit
     ax.set_xlim([-400, 400])
