@@ -15,8 +15,8 @@ tan_weight = 0.15
 run_n = 5000
 all_posis_object = AllPositions(grid_x = 101, grid_y = 75, line_length = 10, fovea_radius = 100)
 full_posi_list = all_posis_object.get_all_posi_in_winsize(winsize = curr_winsize)
-column_names = ["n", "winsize", "numerosity", "all posis", "extra posis", "protect zone type", "convexhull",
-                "occupancy area", "average eccentricity", "average spacing", "density", "radius"]
+column_names = ["n", "winsize", "numerosity", "allposis", "extraposis", "protectzonetype", "convexhull",
+                "occupancyarea", "averageeccentricity", "averagespacing", "density", "radius"]
 
 all_display_df = pd.DataFrame(columns = column_names)
 for n in range(1, run_n + 1):
@@ -29,12 +29,12 @@ for n in range(1, run_n + 1):
     new_display = {"n":                    n,
                    "winsize":              curr_winsize,
                    "numerosity":           len(all_based_posis),
-                   "all posis":            all_based_posis,
-                   "protect zone type":    protect_zone_type,
+                   "allposis":            all_based_posis,
+                   "protectzonetype":    protect_zone_type,
                    "convexhull":           properites.convexhull,
-                   "occupancy area":       properites.occupancy_area,
-                   "average eccentricity": properites.averge_eccentricity,
-                   "average spacing":      properites.average_spacing,
+                   "occupancyarea":       properites.occupancy_area,
+                   "averageeccentricity": properites.averge_eccentricity,
+                   "averagespacing":      properites.average_spacing,
                    "density":              properites.density,
                    "radius":               radial_weight}
 

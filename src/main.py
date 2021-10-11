@@ -14,8 +14,8 @@ save_to_csv = False
 run_n = 500
 all_posis_object = AllPositions(grid_x = 101, grid_y = 75, line_length = 10, fovea_radius = 100)
 full_posi_list = all_posis_object.get_all_posi_in_winsize(winsize = curr_winsize)
-column_names = ["n", "winsize", "numerosity", "all posis", "central posis", "extra posis", "percept pairs",
-                "protect zone type", "convexhull", "occupancy area", "average eccentricity", "average spacing",
+column_names = ["n", "winsize", "numerosity", "allposis", "centralposis", "extraposis", "perceptpairs",
+                "protectzonetype", "convexhull", "occupancyarea", "averageeccentricity", "averagespacing",
                 "density"]
 
 all_display_df = pd.DataFrame(columns = column_names)
@@ -31,15 +31,15 @@ for n in range(1, run_n + 1):
     new_display = {"n":                    n,
                    "winsize":              curr_winsize,
                    "numerosity":           len(my_display[0]) * 2,
-                   "all posis":            my_display[0] + my_display[1],
-                   "central posis":        my_display[0],
-                   "extra posis":          my_display[1],
-                   "percept pairs":        percent_pairs,
-                   "protect zone type":    protect_zone_type,
+                   "allposis":            my_display[0] + my_display[1],
+                   "centralposis":        my_display[0],
+                   "extraposis":          my_display[1],
+                   "perceptpairs":        percent_pairs,
+                   "protectzonetype":    protect_zone_type,
                    "convexhull":           properites.convexhull,
-                   "occupancy area":       properites.occupancy_area,
-                   "average eccentricity": properites.averge_eccentricity,
-                   "average spacing":      properites.average_spacing,
+                   "occupancyarea":       properites.occupancy_area,
+                   "averageeccentricity": properites.averge_eccentricity,
+                   "averagespacing":      properites.average_spacing,
                    "density":              properites.density}
 
     all_display_df = all_display_df.append(new_display, ignore_index = True)
