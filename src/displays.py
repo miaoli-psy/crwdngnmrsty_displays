@@ -2,7 +2,7 @@ from allpositions import AllPositions
 from ellipse import Orientation
 from src.common.process_basic_data_structure import random_split_list, get_diff_between_2_lists
 from src.common.process_polygon import polypoint_to_coords
-from src.draw_displays import drawEllipse_full, draw_disc_only
+from src.draw_displays import drawEllipse_full, draw_disc_only, drawEllipses
 from src.process_plane import get_display, get_close_to_fovea_posi, get_far_from_fovea_posi, get_posi_in_tan_area_a, \
     get_posi_in_tan_area_b
 import random
@@ -83,13 +83,16 @@ if __name__ == '__main__':
     debug = True
     if debug:
         curr_winsize = 0.6
-        protect_zone_ori = Orientation.Both
+        protect_zone_ori = Orientation.Radial
         protect_zone_type = "radial"
         percent_pairs = 0
         all_posis_object = AllPositions(grid_x = 101, grid_y = 75, line_length = 10, fovea_radius = 100)
         full_posi_list = all_posis_object.get_all_posi_in_winsize(winsize = curr_winsize)
         all_based_posis = get_display(full_posi_list, protect_zone_ori = protect_zone_ori)
-        display = generate_display_add_one_extra_discs(all_based_posis, percent_pairs = percent_pairs, add_discs_ori = protect_zone_type)
-        drawEllipse_full(display[0], display[1], ka = 0.25, kb = 0.1, ellipseColor_t = "white", ellipseColor_r = "white")
-        draw_disc_only(display[0], display[1], contrast = True)
+        # display = generate_display_add_one_extra_discs(all_based_posis, percent_pairs = percent_pairs, add_discs_ori = protect_zone_type)
+        extras = get_two_extra_posis(based_posis = all_based_posis, ori = protect_zone_type)
+        display = [all_based_posis, extras]
+        # drawEllipse_full(display[0], display[1], ka = 0.25, kb = 0.1, ellipseColor_t = "white", ellipseColor_r = "white")
+        drawEllipses(all_based_posis, ka = 0.25, kb = 0.1, ellipseColor = "white", extra_posi = extras)
+        # draw_disc_only(display[0], display[1], contrast = True)
         draw_disc_only(display[0], display[1], contrast = False)
