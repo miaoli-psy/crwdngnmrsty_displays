@@ -17,7 +17,7 @@ from src.common.process_basic_data_structure import get_diff_between_2_lists, se
 
 
 def drawEllipse_full(e_posi, extra_posi, ka, kb, ellipseColor_r = 'orangered', ellipseColor_t = 'royalblue',
-                     extra_disc_color = 'orangered', ellipsetransp = 0.5):
+                     extra_disc_color = 'orangered', ellipsetransp = 0.5, savefig = False):
     """
     This function allows to draw more than one ellipse. The parameter is
     a list of coordinate (must contain at least two coordinates)
@@ -83,11 +83,11 @@ def drawEllipse_full(e_posi, extra_posi, ka, kb, ellipseColor_r = 'orangered', e
     ax.axes.get_xaxis().set_visible(False)
     ax.patch.set_facecolor('lightgray')
     plt.show()
+    if savefig:
+        fig.savefig('efull%s.svg' % (str(e_posi)[0:15]), bbox_inches = 'tight', pad_inches = 0)
 
-    fig.savefig('efull%s.svg' % (str(e_posi)[0:15]), bbox_inches = 'tight', pad_inches = 0)
 
-
-def drawEllipses(posi, ka, kb, ellipseColor, ellipsetransp = 0.5, extra_posi = [], extra_disc_color = 'orangered'):
+def drawEllipses(posi, ka, kb, ellipseColor, ellipsetransp = 0.5, extra_posi = [], extra_disc_color = 'orangered', savefig = False):
     eccentricities2 = []
     for i in range(len(posi)):
         eccentricities0 = distance.euclidean(posi[i], (0, 0))
@@ -143,10 +143,11 @@ def drawEllipses(posi, ka, kb, ellipseColor, ellipsetransp = 0.5, extra_posi = [
     # set background color
     ax.patch.set_facecolor('lightgray')
     plt.show()
-    fig.savefig('e%s.svg' % (str(posi)[0:15]), bbox_inches = 'tight', pad_inches = 0)
+    if savefig:
+        fig.savefig('e%s.svg' % (str(posi)[0:15]), bbox_inches = 'tight', pad_inches = 0)
 
 
-def drawEllipses_homo(posi, ka, kb, ellipseColor, ellipsetransp = 0.5, extra_posi = [], extra_disc_color = 'orangered'):
+def drawEllipses_homo(posi, ka, kb, ellipseColor, ellipsetransp = 0.5, extra_posi = [], extra_disc_color = 'orangered', savefig = False):
     eccentricities2 = []
     for i in range(len(posi)):
         eccentricities0 = distance.euclidean(posi[i], (0, 0))
@@ -202,10 +203,11 @@ def drawEllipses_homo(posi, ka, kb, ellipseColor, ellipsetransp = 0.5, extra_pos
     # set background color
     ax.patch.set_facecolor('lightgray')
     plt.show()
-    fig.savefig('e%s.svg' % (str(posi)[0:15]), bbox_inches = 'tight', pad_inches = 0)
+    if savefig:
+        fig.savefig('e%s.svg' % (str(posi)[0:15]), bbox_inches = 'tight', pad_inches = 0)
 
 
-def draw_disc_only(e_posi_base, e_posi_extra, contrast = False):
+def draw_disc_only(e_posi_base, e_posi_extra, contrast = False, savefig = False):
     fig, ax = plt.subplots(subplot_kw = {'aspect': 'equal'}, figsize = (4, 3))
     if contrast:
         for dot in e_posi_base:
@@ -232,8 +234,8 @@ def draw_disc_only(e_posi_base, e_posi_extra, contrast = False):
     # set background color
     ax.patch.set_facecolor('lightgray')
     plt.show()
-
-    fig.savefig('disc%s.svg' % (str(e_posi_base)[0:15]), bbox_inches = 'tight', pad_inches = 0)
+    if savefig:
+        fig.savefig('disc%s.svg' % (str(e_posi_base)[0:15]), bbox_inches = 'tight', pad_inches = 0)
 
 
 def drawEllipse_crowding(e_posi, black_disc_posi, red_disc_posi, crowding_posi, ka, kb, ellipseColor_r = 'royalblue',
