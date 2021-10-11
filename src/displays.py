@@ -58,7 +58,7 @@ def get_no_extra_posi_base(based_posis, percent_pairs):
     return no_extra_posi_base
 
 
-def generate_display_direct_add_extra_discs(based_posis, percent_pairs = 1.0, add_discs_ori = "radial"):
+def generate_display_add_one_extra_discs(based_posis, percent_pairs = 1.0, add_discs_ori = "radial"):
     if percent_pairs == 1.0:
         return based_posis, get_one_extra_random_posis(based_posis, ori = add_discs_ori)
     else:
@@ -89,7 +89,7 @@ if __name__ == '__main__':
         all_posis_object = AllPositions(grid_x = 101, grid_y = 75, line_length = 10, fovea_radius = 100)
         full_posi_list = all_posis_object.get_all_posi_in_winsize(winsize = curr_winsize)
         all_based_posis = get_display(full_posi_list, protect_zone_ori = protect_zone_ori)
-        display = generate_display_direct_add_extra_discs(all_based_posis, percent_pairs = percent_pairs, add_discs_ori = protect_zone_type)
+        display = generate_display_add_one_extra_discs(all_based_posis, percent_pairs = percent_pairs, add_discs_ori = protect_zone_type)
         drawEllipse_full(display[0], display[1], ka = 0.25, kb = 0.1, ellipseColor_t = "white", ellipseColor_r = "white")
         draw_disc_only(display[0], display[1], contrast = True)
         draw_disc_only(display[0], display[1], contrast = False)

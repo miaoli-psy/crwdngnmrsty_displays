@@ -2,7 +2,7 @@ import pandas as pd
 
 from ellipse import Orientation
 from src.allpositions import AllPositions
-from src.displays import generate_display_direct_add_extra_discs
+from src.displays import generate_display_add_one_extra_discs
 from src.process_plane import get_display
 from src.properties import Properties
 

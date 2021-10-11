@@ -2,7 +2,7 @@ import pandas as pd
 
 from ellipse import Orientation
 from src.allpositions import AllPositions
-from src.displays import generate_display_add_one_extra_discs
+from src.displays import generate_display_direct_add_extra_discs
 from src.process_plane import get_display
 from src.properties import Properties
 
@@ -22,9 +22,9 @@ all_display_df = pd.DataFrame(columns = column_names)
 for n in range(1, run_n + 1):
     print(n)
     all_based_posis = get_display(full_posi_list, protect_zone_ori = Orientation.Both)
-    my_display = generate_display_add_one_extra_discs(based_posis = all_based_posis,
-                                                      percent_pairs = percent_pairs,
-                                                      add_discs_ori = protect_zone_type)
+    my_display = generate_display_direct_add_extra_discs(based_posis = all_based_posis,
+                                                         percent_pairs = percent_pairs,
+                                                         add_discs_ori = protect_zone_type)
 
     properites = Properties(my_display[0] + my_display[1])
 
