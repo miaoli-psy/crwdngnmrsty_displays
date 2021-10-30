@@ -29,7 +29,7 @@ for n in range(1, run_n + 1):
 
     new_display = {"n":                   n,
                    "winsize":             curr_winsize,
-                   "numerosity":          len(my_display[0]) * 2,
+                   "numerosity":          len(my_display[0]) * 3,
                    "allposis":            my_display[0] + my_display[1],
                    "centralposis":        my_display[0],
                    "extraposis":          my_display[1],
