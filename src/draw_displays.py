@@ -144,7 +144,7 @@ def drawEllipses(posi, ka, kb, ellipseColor, ellipsetransp = 0.5, extra_posi = [
     ax.patch.set_facecolor('lightgray')
     plt.show()
     if savefig:
-        fig.savefig('e%s.svg' % (str(posi)[0:15]), bbox_inches = 'tight', pad_inches = 0)
+        fig.savefig('e%s%s.svg' % (str(random.randint(0, 100)), str(ellipseColor)), bbox_inches = 'tight', pad_inches = 0)
 
 
 def drawEllipses_homo(posi, ka, kb, ellipseColor, ellipsetransp = 0.5, extra_posi = [], extra_disc_color = 'orangered', savefig = False):
