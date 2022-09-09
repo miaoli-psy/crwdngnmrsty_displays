@@ -39,22 +39,22 @@ def get_average_spacing(posis, pix_to_deg = 0.04):
 
 
 if __name__ == '__main__':
-    write_to_csv = False
+    write_to_excel = False
     PATH = "../../selected_display/"
-    FILE = "ms1_displays.xlsx"
+    FILE = "ms2_displays_triplets.xlsx"
 
     # read display file
     displays = pd.read_excel(PATH + FILE)
 
     # positions, remove str formate
-    process_col(displays, "positions", str_to_list)
+    process_col(displays, "allposis", str_to_list)
 
     # cal properties
-    insert_new_col_from_two_cols(displays, "positions", "index", "convex", get_display_convexhull)
-    insert_new_col_from_two_cols(displays, "positions", "index", "occu", get_display_occupancyarea)
-    insert_new_col_from_two_cols(displays, "N_disk", "occu", "den", get_density)
-    insert_new_col_from_two_cols(displays, "positions", "index", "e", get_display_avg_e)
-    insert_new_col_from_two_cols(displays, "positions", "index", "spacing", get_average_spacing)
+    insert_new_col_from_two_cols(displays, "allposis", "pix_to_deg_index", "convex", get_display_convexhull)
+    insert_new_col_from_two_cols(displays, "allposis", "pix_to_deg_index", "occu", get_display_occupancyarea)
+    insert_new_col_from_two_cols(displays, "numerosity", "occu", "den", get_density)
+    insert_new_col_from_two_cols(displays, "allposis", "pix_to_deg_index", "e", get_display_avg_e)
+    insert_new_col_from_two_cols(displays, "allposis", "pix_to_deg_index", "spacing", get_average_spacing)
 
-    if write_to_csv:
-        displays.to_csv("displays.csv" , index = False)
+    if write_to_excel:
+        displays.to_excel("displays.xlsx", index = False)
