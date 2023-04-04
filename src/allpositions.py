@@ -47,6 +47,10 @@ class AllPositions:
 
         return get_diff_between_2_lists(all_posi_list, outer_posi_list)
 
+    def get_all_posi_in_circular(self, radius = 400):
+        to_remove = [posi for posi in self.all_posis if math.sqrt((posi[0] ** 2) + (posi[1] ** 2)) > radius]
+        return get_diff_between_2_lists(self.all_posis, to_remove)
+
 
 if __name__ == "__main__":
     debug = True
@@ -66,3 +70,11 @@ if __name__ == "__main__":
             ax2.set_xlim(-450, 450)
             ax2.set_ylim(-400, 400)
         plt.show()
+        ax3 = plt.subplot()
+        display_circular = test_posis.get_all_posi_in_circular()
+        for posi in display_circular:
+            ax3.plot(posi[0], posi[1], marker = ".", markersize = 1)
+            ax3.set_xlim(-450, 450)
+            ax3.set_ylim(-400, 400)
+        plt.show()
+
