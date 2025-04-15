@@ -246,7 +246,7 @@ def drawEllipses_homo(posi, ka, kb, ellipseColor, ellipsetransp = 0.5, extra_pos
         fig.savefig('e%s.svg' % (str(posi)[0:15]), bbox_inches = 'tight', pad_inches = 0)
 
 
-def draw_disc_only(e_posi_base, e_posi_extra, contrast = False, savefig = False):
+def draw_disc_only(e_posi_base, e_posi_extra, contrast = False, savefig = False, plot_axis_limit_fixed = False, zoomin = False):
     fig, ax = plt.subplots(subplot_kw = {'aspect': 'equal'}, figsize = (4, 3))
     if contrast:
         for dot in e_posi_base:
@@ -259,9 +259,44 @@ def draw_disc_only(e_posi_base, e_posi_extra, contrast = False, savefig = False)
 
     plt.plot(0, 0, color = 'red', marker = '+', markersize = 4)
 
-    # set x,y lim
-    ax.set_xlim([-400, 400])
-    ax.set_ylim([-260, 260])
+    if plot_axis_limit_fixed:
+        ax.set_xlim([-533, 533])
+        ax.set_ylim([-300, 300])
+    else:
+
+        all_x = [p[0] for p in e_posi_base + e_posi_extra] + [0]
+        all_y = [p[1] for p in e_posi_base + e_posi_extra] + [0]
+
+        max_x = max(abs(x) for x in all_x)
+        max_y = max(abs(y) for y in all_y)
+
+        # 保证所有点都在显示区域内
+        margin_ratio = 1.05
+        max_x *= margin_ratio
+        max_y *= margin_ratio
+
+        # 保持 16:9 比例并扩大范围
+        aspect_ratio = 16 / 9
+        if max_x / max_y >= aspect_ratio:
+            half_width = max_x
+            half_height = half_width / aspect_ratio
+        else:
+            half_height = max_y
+            half_width = half_height * aspect_ratio
+
+        ax.set_xlim(-half_width, half_width)
+        ax.set_ylim(-half_height, half_height)
+
+    if zoomin:
+        all_x = [p[0] for p in e_posi_base + e_posi_extra]
+        all_y = [p[1] for p in e_posi_base + e_posi_extra]
+
+        padding_x = (max(all_x) - min(all_x)) * 0.1 + 10
+        padding_y = (max(all_y) - min(all_y)) * 0.1 + 10
+
+        ax.set_xlim(min(all_x) - padding_x, max(all_x) + padding_x)
+        ax.set_ylim(min(all_y) - padding_y, max(all_y) + padding_y)
+
     # 边框不可见
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
