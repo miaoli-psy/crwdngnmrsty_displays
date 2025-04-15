@@ -43,8 +43,7 @@ class AllPositions:
             all_posi_list = self.all_posis_no_fovea
         # TODO optimize
         for posi in all_posi_list:
-            if abs(posi[0]) > max_corrdinate[0] * winsize or abs(posi[1]) > max_corrdinate[
-                1] * winsize:
+            if abs(posi[0]) > max_corrdinate[0] * winsize or abs(posi[1]) > max_corrdinate[1] * winsize:
                 outer_posi_list.append(posi)
 
         return get_diff_between_2_lists(all_posi_list, outer_posi_list)
@@ -56,10 +55,11 @@ class AllPositions:
 
 
 class AllPositions_full:
-    def __init__(self, width=1920, height=1080, fovea_radius=100):
+    def __init__(self, width=1920, height=1080, fovea_radius=100, window_size = 0.6):
         self.width = width
         self.height = height
         self.fovea_radius = fovea_radius
+        self.window_size = window_size
 
     def generate_all_posi_full(self):
         """
@@ -71,49 +71,48 @@ class AllPositions_full:
         start_x = -0.5 * self.width + 0.5
         start_y = -0.5 * self.height + 0.5
 
+        window_width = int(self.width * self.window_size)
+        window_height = int(self.height * self.window_size)
+
+        x_offset = (self.width - window_width) // 2
+        y_offset = (self.height - window_height) // 2
+
         positions = []
-        for x in range(self.width):
+        for x in range(x_offset, x_offset + window_width):
             new_x = start_x + x
-            for y in range(self.height):
+            for y in range(y_offset, y_offset + window_height):
                 new_y = start_y + y
-                # remove fovea region
-                if math.hypot(new_x, new_y) >= self.fovea_radius and not (
-                        new_x == 0 and new_y == 0):
+                if math.hypot(new_x, new_y) >= self.fovea_radius and not (new_x == 0 and new_y == 0):
                     positions.append((new_x, new_y))
         return positions
 
-    def generate_sector_posi(self, angle_deg = 20, direction_deg = 0):
+    def generate_sector_posi(self, angle_deg=20, direction_deg=0):
         """
         Returns positions within a sector from (0, 0) with given angle and direction (both in degrees).
         Excludes points within the fovea.
+        angle_deg: 扇形夹角
+        direction_deg: 3 o'clock 0 deg, 12 o'clock 90 deg
         """
-        start_x = -0.5 * self.width + 0.5
-        start_y = -0.5 * self.height + 0.5
+        all_positions = self.generate_all_posi_full()
 
         # converts sector angle and direction into radians
         angle_rad = math.radians(angle_deg) / 2  # Half on each side
-        direction_rad = math.radians(direction_deg) % (2 * math.pi) #ensure direction_rad is in [0, 2pi]
+        direction_rad = math.radians(direction_deg) % (
+                    2 * math.pi)  # ensure direction_rad is in [0, 2pi]
 
-        positions = []
-        for x in range(self.width):
-            new_x = start_x + x
-            for y in range(self.height):
-                new_y = start_y + y
-                r = math.hypot(new_x, new_y)
-                if r < self.fovea_radius or (new_x == 0 and new_y == 0):
-                    continue
-                # converts Cartesian to polar angle theta(in radians)
-                theta = math.atan2(new_y, new_x)
-                theta = (theta + 2 * math.pi) % (2 * math.pi) #normalizes anlge to [0, 2pi]
+        sector_positions = []
+        for x, y in all_positions:
+            # converts Cartesian to polar angle theta(in radians)
+            theta = math.atan2(y, x)
+            theta = (theta + 2 * math.pi) % (2 * math.pi)
 
-                #calcualte minimal angular difference between point angle and sector direction
-                diff = abs(((theta - direction_rad + math.pi) % (2 * math.pi)) - math.pi)
+            # calcualte minimal angular difference between point angle and sector direction
+            diff = abs(((theta - direction_rad + math.pi) % (2 * math.pi)) - math.pi)
+            # if within the sector wedge, keep the point
+            if diff <= angle_rad:
+                sector_positions.append((x, y))
 
-                # if within the sector wedge, keep the point
-                if diff <= angle_rad:
-                    positions.append((new_x, new_y))
-
-        return positions
+        return sector_positions
 
 
 if __name__ == "__main__":
@@ -147,7 +146,7 @@ if __name__ == "__main__":
         ax3.set_aspect("equal")
         plt.show()
 
-        test_posi_full = AllPositions_full()
+        test_posi_full = AllPositions_full(window_size = 0.8)
         ax4 = plt.subplot()
         pixel_posis = test_posi_full.generate_all_posi_full()
         sampled = pixel_posis[::500]  # 避免卡住，采样一点 每500取一个点
@@ -159,7 +158,7 @@ if __name__ == "__main__":
         plt.show()
 
         ax5 = plt.subplot()
-        pixel_posis = test_posi_full.generate_sector_posi(angle_deg = 90, direction_deg = 180)
+        pixel_posis = test_posi_full.generate_sector_posi(angle_deg=90, direction_deg=180)
         sampled = pixel_posis[::500]
         for pos in sampled:
             ax5.plot(pos[0], pos[1], marker=".", markersize=1)
