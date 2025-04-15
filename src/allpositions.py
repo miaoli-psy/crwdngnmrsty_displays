@@ -5,7 +5,7 @@ from itertools import combinations
 
 
 class AllPositions:
-    def __init__(self, grid_x = 101, grid_y = 75, line_length = 10, fovea_radius = 100):
+    def __init__(self, grid_x=101, grid_y=75, line_length=10, fovea_radius=100):
         self.grid_x = grid_x
         self.grid_y = grid_y
         self.line_length = line_length
@@ -13,7 +13,7 @@ class AllPositions:
         self.all_posis = self.generate_all_posis()
         self.all_posis_no_fovea = self.get_all_posis_remove_fovea()
 
-    def generate_all_posis(self, width = 1920, height = 1080):
+    def generate_all_posis(self, width=1920, height=1080):
         """get full positions in a dimension of grid_x*grid_y"""
         start_x = -0.5 * self.line_length * self.grid_x + 0.5 * self.line_length
         start_y = -0.5 * self.line_length * self.grid_y + 0.5 * self.line_length
@@ -30,10 +30,11 @@ class AllPositions:
         return positions
 
     def get_all_posis_remove_fovea(self):
-        to_remove = [posi for posi in self.all_posis if math.sqrt((posi[0] ** 2) + (posi[1] ** 2)) < self.fovea_radius]
+        to_remove = [posi for posi in self.all_posis if
+                     math.sqrt((posi[0] ** 2) + (posi[1] ** 2)) < self.fovea_radius]
         return get_diff_between_2_lists(self.all_posis, to_remove)
 
-    def get_all_posi_in_winsize(self, include_fovea = False, winsize = 0.8):
+    def get_all_posi_in_winsize(self, include_fovea=False, winsize=0.8):
         max_corrdinate = max(self.all_posis_no_fovea)
         outer_posi_list = list()
         if include_fovea:
@@ -42,31 +43,76 @@ class AllPositions:
             all_posi_list = self.all_posis_no_fovea
         # TODO optimize
         for posi in all_posi_list:
-            if abs(posi[0]) > max_corrdinate[0] * winsize or abs(posi[1]) > max_corrdinate[1] * winsize:
+            if abs(posi[0]) > max_corrdinate[0] * winsize or abs(posi[1]) > max_corrdinate[
+                1] * winsize:
                 outer_posi_list.append(posi)
 
         return get_diff_between_2_lists(all_posi_list, outer_posi_list)
 
-    def get_all_posi_in_circular(self, radius = 400):
-        to_remove = [posi for posi in self.all_posis if math.sqrt((posi[0] ** 2) + (posi[1] ** 2)) > radius]
+    def get_all_posi_in_circular(self, radius=400):
+        to_remove = [posi for posi in self.all_posis if
+                     math.sqrt((posi[0] ** 2) + (posi[1] ** 2)) > radius]
         return get_diff_between_2_lists(self.all_posis, to_remove)
 
-    def generate_all_posi_full(self, width=1920, height=1080):
+
+class AllPositions_full:
+    def __init__(self, width=1920, height=1080, fovea_radius=100):
+        self.width = width
+        self.height = height
+        self.fovea_radius = fovea_radius
+
+    def generate_all_posi_full(self):
         """
         Like generate_all_posis, but for full 1920×1080 grid centered at (0,0),
         using line_length = 1. Coordinates match standard math orientation.
-        Removes fovea and (0,0).
         """
-        start_x = -0.5 * width + 0.5
-        start_y = -0.5 * height + 0.5
+
+        # center the coordinate system at (0, 0). Transfor grid indices into Cartesian coordinates
+        start_x = -0.5 * self.width + 0.5
+        start_y = -0.5 * self.height + 0.5
 
         positions = []
-        for x in range(width):
+        for x in range(self.width):
             new_x = start_x + x
-            for y in range(height):
+            for y in range(self.height):
                 new_y = start_y + y
-                if math.hypot(new_x, new_y) >= self.fovea_radius and not (new_x == 0 and new_y == 0):
+                # remove fovea region
+                if math.hypot(new_x, new_y) >= self.fovea_radius and not (
+                        new_x == 0 and new_y == 0):
                     positions.append((new_x, new_y))
+        return positions
+
+    def generate_sector_posi(self, angle_deg = 20, direction_deg = 0):
+        """
+        Returns positions within a sector from (0, 0) with given angle and direction (both in degrees).
+        Excludes points within the fovea.
+        """
+        start_x = -0.5 * self.width + 0.5
+        start_y = -0.5 * self.height + 0.5
+
+        # converts sector angle and direction into radians
+        angle_rad = math.radians(angle_deg) / 2  # Half on each side
+        direction_rad = math.radians(direction_deg) % (2 * math.pi) #ensure direction_rad is in [0, 2pi]
+
+        positions = []
+        for x in range(self.width):
+            new_x = start_x + x
+            for y in range(self.height):
+                new_y = start_y + y
+                r = math.hypot(new_x, new_y)
+                if r < self.fovea_radius or (new_x == 0 and new_y == 0):
+                    continue
+                # converts Cartesian to polar angle theta(in radians)
+                theta = math.atan2(new_y, new_x)
+                theta = (theta + 2 * math.pi) % (2 * math.pi) #normalizes anlge to [0, 2pi]
+
+                #calcualte minimal angular difference between point angle and sector direction
+                diff = abs(((theta - direction_rad + math.pi) % (2 * math.pi)) - math.pi)
+
+                # if within the sector wedge, keep the point
+                if diff <= angle_rad:
+                    positions.append((new_x, new_y))
+
         return positions
 
 
@@ -77,16 +123,16 @@ if __name__ == "__main__":
         all = test_posis.all_posis_no_fovea
         ax = plt.subplot()
         for posi in all:
-            ax.plot(posi[0], posi[1], marker = ".", markersize = 1)
+            ax.plot(posi[0], posi[1], marker=".", markersize=1)
         ax.set_xlim(-450, 450)
         ax.set_ylim(-400, 400)
         ax.set_aspect("equal")
         plt.show()
 
         ax2 = plt.subplot()
-        win06 = test_posis.get_all_posi_in_winsize(winsize = 0.6)
+        win06 = test_posis.get_all_posi_in_winsize(winsize=0.6)
         for posi in win06:
-            ax2.plot(posi[0], posi[1], marker = ".", markersize = 1)
+            ax2.plot(posi[0], posi[1], marker=".", markersize=1)
         ax2.set_xlim(-450, 450)
         ax2.set_ylim(-400, 400)
         ax2.set_aspect("equal")
@@ -95,15 +141,16 @@ if __name__ == "__main__":
         ax3 = plt.subplot()
         display_circular = test_posis.get_all_posi_in_circular()
         for posi in display_circular:
-            ax3.plot(posi[0], posi[1], marker = ".", markersize = 1)
+            ax3.plot(posi[0], posi[1], marker=".", markersize=1)
         ax3.set_xlim(-450, 450)
         ax3.set_ylim(-400, 400)
         ax3.set_aspect("equal")
         plt.show()
 
+        test_posi_full = AllPositions_full()
         ax4 = plt.subplot()
-        pixel_posis = test_posis.generate_all_posi_full()
-        sampled = pixel_posis[::50]  # 避免卡住，采样一点 每50取一个点
+        pixel_posis = test_posi_full.generate_all_posi_full()
+        sampled = pixel_posis[::500]  # 避免卡住，采样一点 每500取一个点
         for pos in sampled:
             ax4.plot(pos[0], pos[1], marker=".", markersize=1)
         ax4.set_xlim(-960, 960)
@@ -111,3 +158,12 @@ if __name__ == "__main__":
         ax4.set_aspect('equal')
         plt.show()
 
+        ax5 = plt.subplot()
+        pixel_posis = test_posi_full.generate_sector_posi(angle_deg = 90, direction_deg = 180)
+        sampled = pixel_posis[::500]
+        for pos in sampled:
+            ax5.plot(pos[0], pos[1], marker=".", markersize=1)
+        ax5.set_xlim(-960, 960)
+        ax5.set_ylim(-540, 540)
+        ax5.set_aspect('equal')
+        plt.show()
