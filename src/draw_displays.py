@@ -16,12 +16,14 @@ from scipy.spatial import distance
 from src.common.process_basic_data_structure import get_diff_between_2_lists, select_random_half
 
 
-def drawEllipse_full(e_posi, extra_posi, ka, kb, ellipseColor_r = 'orangered', ellipseColor_t = 'royalblue',
-                     extra_disc_color = 'orangered', ellipsetransp = 0.5, savefig = False):
+def drawEllipse_full(e_posi, extra_posi, ka, kb, ellipseColor_r = 'white', ellipseColor_t = 'white',
+                     extra_disc_color = 'orangered', ellipsetransp = 0.5, savefig = False, plot_axis_limit_fixed = False, zoomin = False):
     """
     This function allows to draw more than one ellipse. The parameter is
     a list of coordinate (must contain at least two coordinates)
     The radial and tangential ellipses for the same coordinates are drawn.
+    plot_axis_limit_fixed: False 根据最外面的点位置设定x，y长度
+    zoomin： Ture：只看局部（有点）的画面
     """
     eccentricities = []
     for i in range(len(e_posi)):
@@ -69,9 +71,46 @@ def drawEllipse_full(e_posi, extra_posi, ka, kb, ellipseColor_r = 'orangered', e
     # plt.show()
     # ax.set_xlim([-800, 800])
     # ax.set_ylim([-500, 500])
-    ax.set_xlim([-400, 400])
-    ax.set_ylim([-260, 260])
+
     # ax.set_title('wS_%s_eS_%s_%s_E.png' %(newWindowSize,ka,kb))
+
+    if plot_axis_limit_fixed:
+        ax.set_xlim([-533, 533])
+        ax.set_ylim([-300, 300])
+    else:
+
+        all_x = [p[0] for p in e_posi + extra_posi] + [0]
+        all_y = [p[1] for p in e_posi + extra_posi] + [0]
+
+        max_x = max(abs(x) for x in all_x)
+        max_y = max(abs(y) for y in all_y)
+
+        # 保证所有点都在显示区域内
+        margin_ratio = 1.05
+        max_x *= margin_ratio
+        max_y *= margin_ratio
+
+        # 保持 16:9 比例并扩大范围
+        aspect_ratio = 16 / 9
+        if max_x / max_y >= aspect_ratio:
+            half_width = max_x
+            half_height = half_width / aspect_ratio
+        else:
+            half_height = max_y
+            half_width = half_height * aspect_ratio
+
+        ax.set_xlim(-half_width, half_width)
+        ax.set_ylim(-half_height, half_height)
+
+    if zoomin:
+        all_x = [p[0] for p in e_posi + extra_posi]
+        all_y = [p[1] for p in e_posi + extra_posi]
+
+        padding_x = (max(all_x) - min(all_x)) * 0.1 + 10
+        padding_y = (max(all_y) - min(all_y)) * 0.1 + 10
+
+        ax.set_xlim(min(all_x) - padding_x, max(all_x) + padding_x)
+        ax.set_ylim(min(all_y) - padding_y, max(all_y) + padding_y)
 
     # 边框不可见
     ax.spines['top'].set_visible(False)
@@ -130,8 +169,8 @@ def drawEllipses(posi, ka, kb, ellipseColor, ellipsetransp = 0.5, extra_posi = [
     plt.plot(0, 0, color = 'red', marker = '+', markersize = 4)
 
     # set x,y lim
-    ax.set_xlim([-400, 400])
-    ax.set_ylim([-260, 260])
+    ax.set_xlim([-500, 500])
+    ax.set_ylim([-360, 360])
     # 边框不可见
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
