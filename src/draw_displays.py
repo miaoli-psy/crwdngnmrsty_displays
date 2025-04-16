@@ -123,7 +123,7 @@ def drawEllipse_full(e_posi, extra_posi, ka, kb, ellipseColor_r = 'white', ellip
     ax.patch.set_facecolor('lightgray')
     plt.show()
     if savefig:
-        fig.savefig('efull%s.svg' % (str(e_posi)[0:15]), bbox_inches = 'tight', pad_inches = 0)
+        fig.savefig('efull%s_zoomin%s.svg' % (str(e_posi)[0:15], zoomin), bbox_inches = 'tight', pad_inches = 0)
 
 
 def drawEllipses(posi, ka, kb, ellipseColor, ellipsetransp = 0.5, extra_posi = [], extra_disc_color = 'orangered', savefig = False):

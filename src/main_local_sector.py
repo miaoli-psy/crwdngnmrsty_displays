@@ -10,15 +10,15 @@ from src.properties import Properties
 
 
 curr_winsize = 0.6
-sector_angle = 5 # 0-360
+sector_angle = 90 # 0-360
 direction = 0 # 0-360
 fovea_radius = 200
 radial_weight = 0.25
 tangential_weight = 0.1
 protect_zone_type = "radial"
-# display_type = "tangential"
-save_to_csv = False
-demo_plots = False
+# protect_zone_type = "tangential"
+save_to_csv = True
+demo_plots = True
 run_n = 10
 
 all_posis_Object = AllPositions_full(width = 1920, height = 1080, fovea_radius = 200, window_size = curr_winsize)
@@ -59,7 +59,8 @@ if save_to_csv:
     all_display_df.to_csv("ws%s_%s_angle%s_drctn%s.csv" % (curr_winsize, protect_zone_type, sector_angle, direction), index = False)
 
 if demo_plots:
-    i = 4  # choose the row index you want to plot, it's coln-1
+    savefig = True
+    i = 1  # choose the row index you want to plot, it's coln-1
     row = all_display_df.iloc[i]
 
     base_posis = row['centralposis']
@@ -67,6 +68,6 @@ if demo_plots:
     ka = radial_weight
     kb = tangential_weight
 
-    drawEllipse_full(base_posis, extra_posis, ka=ka, kb=kb, plot_axis_limit_fixed=False, zoomin=True)
-    drawEllipse_full(base_posis, extra_posis, ka=ka, kb=kb, plot_axis_limit_fixed=False, zoomin=False)
-    draw_disc_only(base_posis, extra_posis)
+    drawEllipse_full(base_posis, extra_posis, ka=ka, kb=kb, plot_axis_limit_fixed=False, zoomin=True, savefig=savefig)
+    drawEllipse_full(base_posis, extra_posis, ka=ka, kb=kb, plot_axis_limit_fixed=False, zoomin=False, savefig=savefig)
+    draw_disc_only(base_posis, extra_posis,savefig=savefig)
