@@ -1,3 +1,5 @@
+import warnings
+
 from scipy.spatial import distance, ConvexHull
 from itertools import combinations
 import numpy as np
@@ -16,7 +18,15 @@ class Properties:
         self.occupancy_area = round(self.__hull.volume * pix_to_deg ** 2, 2)
         self.averge_eccentricity = self.cal_averge_eccentricity()
         self.average_spacing = self.get_average_spacing()
-        self.density = round(len(posilist) / self.occupancy_area, 4)
+
+        if self.occupancy_area == 0:
+            warnings.warn("occupancy_area is 0. Using 0.001 to avoid division by zero.")
+            safe_area = 0.001
+        else:
+            safe_area = self.occupancy_area
+
+        self.density = round(len(posilist) / safe_area, 4)
+        # self.density = round(len(posilist) / self.occupancy_area, 4)
         self.numerosity = len(posilist)
 
     def cal_averge_eccentricity(self):
