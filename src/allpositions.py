@@ -1,4 +1,5 @@
 import math
+import warnings
 import matplotlib.pyplot as plt
 from src.common.process_basic_data_structure import get_diff_between_2_lists
 from itertools import combinations
@@ -61,6 +62,7 @@ class AllPositions_full:
         self.fovea_radius = fovea_radius
         self.window_size = window_size
 
+
     def generate_all_posi_full(self):
         """
         Like generate_all_posis, but for full 1920×1080 grid centered at (0,0),
@@ -86,6 +88,23 @@ class AllPositions_full:
                     positions.append((new_x, new_y))
         return positions
 
+    def generate_posi_in_circle(self, radius = None):
+
+        full_posis = self.generate_all_posi_full()
+        max_radius = 0.5 * self.height * self.window_size
+
+        if radius is None:
+            radius = max_radius
+
+        elif radius > max_radius:
+            warnings.warn(f"Input radius {radius} exceeds maximum effective radius {max_radius:.2f}. Limiting to {max_radius:.2f}.")
+            radius = max_radius
+
+        return [(x, y) for (x, y) in full_posis if math.hypot(x, y) <= radius]
+
+
+
+
     def generate_sector_posi(self, angle_deg=20, direction_deg=0):
         """
         Returns positions within a sector from (0, 0) with given angle and direction (both in degrees).
@@ -93,7 +112,8 @@ class AllPositions_full:
         angle_deg: 扇形夹角
         direction_deg: 3 o'clock 0 deg, 12 o'clock 90 deg
         """
-        all_positions = self.generate_all_posi_full()
+        # all_positions = self.generate_all_posi_full()
+        all_positions = self.generate_posi_in_circle(radius=self.height/2)
 
         # converts sector angle and direction into radians
         angle_rad = math.radians(angle_deg) / 2  # Half on each side
@@ -118,51 +138,64 @@ class AllPositions_full:
 if __name__ == "__main__":
     debug = True
     if debug:
-        test_posis = AllPositions()
-        all = test_posis.all_posis_no_fovea
-        ax = plt.subplot()
-        for posi in all:
-            ax.plot(posi[0], posi[1], marker=".", markersize=1)
-        ax.set_xlim(-450, 450)
-        ax.set_ylim(-400, 400)
-        ax.set_aspect("equal")
-        plt.show()
-
-        ax2 = plt.subplot()
-        win06 = test_posis.get_all_posi_in_winsize(winsize=0.6)
-        for posi in win06:
-            ax2.plot(posi[0], posi[1], marker=".", markersize=1)
-        ax2.set_xlim(-450, 450)
-        ax2.set_ylim(-400, 400)
-        ax2.set_aspect("equal")
-        plt.show()
-
-        ax3 = plt.subplot()
-        display_circular = test_posis.get_all_posi_in_circular()
-        for posi in display_circular:
-            ax3.plot(posi[0], posi[1], marker=".", markersize=1)
-        ax3.set_xlim(-450, 450)
-        ax3.set_ylim(-400, 400)
-        ax3.set_aspect("equal")
-        plt.show()
-
+        # test_posis = AllPositions()
+        # all = test_posis.all_posis_no_fovea
+        # ax = plt.subplot()
+        # for posi in all:
+        #     ax.plot(posi[0], posi[1], marker=".", markersize=1)
+        # ax.set_xlim(-450, 450)
+        # ax.set_ylim(-400, 400)
+        # ax.set_aspect("equal")
+        # plt.show()
+        #
+        # ax2 = plt.subplot()
+        # win06 = test_posis.get_all_posi_in_winsize(winsize=0.6)
+        # for posi in win06:
+        #     ax2.plot(posi[0], posi[1], marker=".", markersize=1)
+        # ax2.set_xlim(-450, 450)
+        # ax2.set_ylim(-400, 400)
+        # ax2.set_aspect("equal")
+        # plt.show()
+        #
+        # ax3 = plt.subplot()
+        # display_circular = test_posis.get_all_posi_in_circular()
+        # for posi in display_circular:
+        #     ax3.plot(posi[0], posi[1], marker=".", markersize=1)
+        # ax3.set_xlim(-450, 450)
+        # ax3.set_ylim(-400, 400)
+        # ax3.set_aspect("equal")
+        # plt.show()
+        #
         test_posi_full = AllPositions_full(window_size = 0.8)
-        ax4 = plt.subplot()
-        pixel_posis = test_posi_full.generate_all_posi_full()
-        sampled = pixel_posis[::500]  # 避免卡住，采样一点 每500取一个点
-        for pos in sampled:
-            ax4.plot(pos[0], pos[1], marker=".", markersize=1)
-        ax4.set_xlim(-960, 960)
-        ax4.set_ylim(-540, 540)
-        ax4.set_aspect('equal')
-        plt.show()
-
+        # ax4 = plt.subplot()
+        # pixel_posis = test_posi_full.generate_all_posi_full()
+        # sampled = pixel_posis[::500]  # 避免卡住，采样一点 每500取一个点
+        # for pos in sampled:
+        #     ax4.plot(pos[0], pos[1], marker=".", markersize=1)
+        # ax4.set_xlim(-960, 960)
+        # ax4.set_ylim(-540, 540)
+        # ax4.set_aspect('equal')
+        # plt.show()
+        #
         ax5 = plt.subplot()
-        pixel_posis = test_posi_full.generate_sector_posi(angle_deg=90, direction_deg=180)
-        sampled = pixel_posis[::500]
+        pixel_posis = test_posi_full.generate_sector_posi(angle_deg=90, direction_deg=0)
+        sampled = pixel_posis[::50]
         for pos in sampled:
             ax5.plot(pos[0], pos[1], marker=".", markersize=1)
         ax5.set_xlim(-960, 960)
         ax5.set_ylim(-540, 540)
         ax5.set_aspect('equal')
         plt.show()
+
+        posis_gen_test = AllPositions_full(window_size=0.6)
+        filter_circuler_posis = posis_gen_test.generate_posi_in_circle(radius=1080)
+        ax6 = plt.subplot()
+        sampled = filter_circuler_posis[::500]
+        for pos in sampled:
+            ax6.plot(pos[0], pos[1], marker=".", markersize=1)
+        ax6.set_xlim(-960, 960)
+        ax6.set_ylim(-540, 540)
+        ax6.set_aspect('equal')
+        plt.show()
+
+
