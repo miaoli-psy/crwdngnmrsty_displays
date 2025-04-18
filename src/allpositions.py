@@ -103,17 +103,17 @@ class AllPositions_full:
         return [(x, y) for (x, y) in full_posis if math.hypot(x, y) <= radius]
 
 
-
-
-    def generate_sector_posi(self, angle_deg=20, direction_deg=0):
+    def generate_sector_posi(self, angle_deg=20, direction_deg=0, all_positions=None):
         """
         Returns positions within a sector from (0, 0) with given angle and direction (both in degrees).
         Excludes points within the fovea.
         angle_deg: 扇形夹角
         direction_deg: 3 o'clock 0 deg, 12 o'clock 90 deg
+        all_positions: if None, get all possible positions in circular region
         """
         # all_positions = self.generate_all_posi_full()
-        all_positions = self.generate_posi_in_circle(radius=self.height/2)
+        if all_positions is None:
+            all_positions = self.generate_posi_in_circle(radius=self.height/2)
 
         # converts sector angle and direction into radians
         angle_rad = math.radians(angle_deg) / 2  # Half on each side
