@@ -13,17 +13,18 @@ from src.properties import Properties
 
 curr_winsize = 1
 sector_angle = 170 # 0-360
-direction = 0 # 0-360
+direction =  0 # 0-360
 fovea_radius = 100 # fovea where no disc is allowed
 circular_region_radius = 512 # circular region allowed discs
 radial_weight = 0.25
 tangential_weight = 0.1
-# protect_zone_type = "radial"
-protect_zone_type = "tangential"
+protect_zone_type = "radial"
+# protect_zone_type = "tangential"
 save_to_csv = True
 savefig = False
-demo_plots = True
-run_n = 5
+demo_plots = False
+run_n = 50000
+write_full_properites = False
 
 all_posis_Object = AllPositions_full(width = 1920, height = 1080, fovea_radius = 200, window_size = curr_winsize)
 filter_circular_posis = all_posis_Object.generate_posi_in_circle(radius = circular_region_radius)
@@ -46,18 +47,29 @@ for n in tqdm(range(1, run_n + 1), desc="Generating Displays"): # 加入进度�
 
     properites = Properties(my_display[0] + my_display[1])
 
-    new_display = {"n":                   n,
-                   "winsize":             curr_winsize,
-                   "numerosity":          len(my_display[0]) * 3,
-                   "allposis":            my_display[0] + my_display[1],
-                   "centralposis":        my_display[0],
-                   "extraposis":          my_display[1],
-                   "protectzonetype":     protect_zone_type,
-                   "convexhull":          properites.convexhull,
-                   "occupancyarea":       properites.occupancy_area,
-                   "averageeccentricity": properites.averge_eccentricity,
-                   "averagespacing":      properites.average_spacing,
-                   "density":             properites.density}
+    if write_full_properites:
+
+        new_display = {"n":                   n,
+                       "winsize":             curr_winsize,
+                       "numerosity":          len(my_display[0]) * 3,
+                       "allposis":            my_display[0] + my_display[1],
+                       "centralposis":        my_display[0],
+                       "extraposis":          my_display[1],
+                       "protectzonetype":     protect_zone_type,
+                       "convexhull":          properites.convexhull,
+                       "occupancyarea":       properites.occupancy_area,
+                       "averageeccentricity": properites.averge_eccentricity,
+                       "averagespacing":      properites.average_spacing,
+                       "density":             properites.density}
+    else:
+        new_display = {"n":                   n,
+                       "winsize":             curr_winsize,
+                       "numerosity":          len(my_display[0]) * 3,
+                       "allposis":            my_display[0] + my_display[1],
+                       "centralposis":        my_display[0],
+                       "extraposis":          my_display[1],
+                       "protectzonetype":     protect_zone_type}
+
     rows.append(new_display)
 
 # all_display_df = pd.concat([all_display_df, pd.DataFrame([new_display])], ignore_index=True)
