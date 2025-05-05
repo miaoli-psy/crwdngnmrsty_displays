@@ -12,8 +12,8 @@ from src.properties import Properties
 
 
 curr_winsize = 1
-sector_angle = 170 # 0-360
-direction =  0 # 0-360
+sector_angle = 120 # 0-360
+direction =  180 # 0-360
 fovea_radius = 100 # fovea where no disc is allowed
 circular_region_radius = 512 # circular region allowed discs
 radial_weight = 0.25
@@ -23,7 +23,7 @@ protect_zone_type = "radial"
 save_to_csv = True
 savefig = False
 demo_plots = False
-run_n = 50000
+run_n = 100000
 write_full_properites = False
 
 all_posis_Object = AllPositions_full(width = 1920, height = 1080, fovea_radius = 200, window_size = curr_winsize)
