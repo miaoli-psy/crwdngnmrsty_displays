@@ -10,15 +10,16 @@ from src.allpositions import AllPositions_full
 from src.properties import Properties
 
 # Fixed parameters
+n_cores = 36
 curr_winsize = 1
-sector_angle = 170
-direction = 180
+sector_angle = 120
+direction = 0
 fovea_radius = 100
 circular_region_radius = 512
 radial_weight = 0.25
 tangential_weight = 0.1
-protect_zone_type = "radial"
-# protect_zone_type = "tangential"
+# protect_zone_type = "radial"
+protect_zone_type = "tangential"
 save_to_csv = True
 demo_plots = False
 savefig = False
@@ -71,7 +72,7 @@ if __name__ == "__main__":
     if write_full_properites:
         column_names += ["convexhull", "occupancyarea", "averageeccentricity", "averagespacing", "density"]
 
-    with ProcessPoolExecutor() as executor:
+    with ProcessPoolExecutor(max_workers = n_cores) as executor:
         results = list(tqdm(executor.map(generate_one_display, range(1, run_n + 1)), total=run_n))
 
     all_display_df = pd.DataFrame(results, columns=column_names)
@@ -81,3 +82,5 @@ if __name__ == "__main__":
         file_name = "ws%s_%s_angle%s_drctn%s.csv" % (curr_winsize, protect_zone_type, sector_angle, direction)
         save_path = os.path.join(current_dir, file_name)
         all_display_df.to_csv(save_path, index=False)
+
+# print("Using", os.cpu_count(), "cores")
