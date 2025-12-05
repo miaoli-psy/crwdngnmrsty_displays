@@ -26,18 +26,18 @@ def get_one_extra_random_posis(based_posis, ori = "radial"):
     return extra_posis
 
 
-def get_two_extra_posis(based_posis, ori = "radial"):
+def get_two_extra_posis(based_posis, ori = "radial", radial_weight=0.25, tan_weight=0.1):
     extra_posis = list()
     for posi in based_posis:
         if ori == "radial":
-            point = get_close_to_fovea_posi(posi)
+            point = get_close_to_fovea_posi(posi,radial_weight, tan_weight)
             extra_posis.append(polypoint_to_coords(point))
-            point = get_far_from_fovea_posi(posi)
+            point = get_far_from_fovea_posi(posi,radial_weight, tan_weight)
             extra_posis.append(polypoint_to_coords(point))
         elif ori == "tangential":
-            point = get_posi_in_tan_area_a(posi)
+            point = get_posi_in_tan_area_a(posi,radial_weight, tan_weight)
             extra_posis.append(polypoint_to_coords(point))
-            point = get_posi_in_tan_area_b(posi)
+            point = get_posi_in_tan_area_b(posi,radial_weight, tan_weight)
             extra_posis.append(polypoint_to_coords(point))
     return extra_posis
 

@@ -68,15 +68,15 @@ def get_display(full_posi_list: list, protect_zone_ori=Orientation.Both, radial_
     return taken_posi_list
 
 
-def get_close_to_fovea_posi(posi):
+def get_close_to_fovea_posi(posi, radial_weight=0.25, tan_weight=0.1):
     radial_ellipse_poly = Ellipse(ellipse_center_coordinate=posi,
-                                  ka=__get_major_axis(posi),
-                                  kb=__get_minor_axis(posi),
+                                  ka=__get_major_axis(posi, weight=radial_weight),
+                                  kb=__get_minor_axis(posi, weight=tan_weight),
                                   orientation=Orientation.Radial).polygon
 
     tangential_ellipse_poly = Ellipse(ellipse_center_coordinate=posi,
-                                      ka=__get_major_axis(posi),
-                                      kb=__get_minor_axis(posi),
+                                      ka=__get_major_axis(posi, weight=radial_weight),
+                                      kb=__get_minor_axis(posi, weight=tan_weight),
                                       orientation=Orientation.Tangential).polygon
 
     intersect = get_intersect_poly(radial_ellipse_poly, tangential_ellipse_poly)
@@ -88,19 +88,19 @@ def get_close_to_fovea_posi(posi):
                 return point
 
 
-def get_far_from_fovea_posi(posi):
-    point = get_close_to_fovea_posi(posi)
+def get_far_from_fovea_posi(posi, radial_weight=0.25, tan_weight=0.1):
+    point = get_close_to_fovea_posi(posi, radial_weight, tan_weight)
     return affinity.rotate(point, 180, origin=Point(posi))
 
 
-def get_posi_in_tan_area_a(posi):
-    # 如posi在第一象限，此点靠近x轴（逆时针转90度）
-    point = get_close_to_fovea_posi(posi)
+def get_posi_in_tan_area_a(posi, radial_weight=0.25, tan_weight=0.1):
+    # 如 posi 在第一象限，此点靠近 x 轴（逆时针转 90 度）
+    point = get_close_to_fovea_posi(posi, radial_weight, tan_weight)
     return affinity.rotate(point, 90, origin=Point(posi))
 
 
-def get_posi_in_tan_area_b(posi):
-    point = get_close_to_fovea_posi(posi)
+def get_posi_in_tan_area_b(posi, radial_weight=0.25, tan_weight=0.1):
+    point = get_close_to_fovea_posi(posi, radial_weight, tan_weight)
     return affinity.rotate(point, 270, origin=Point(posi))
 
 
