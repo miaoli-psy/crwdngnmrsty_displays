@@ -1,3 +1,8 @@
+"""
+neutral displays with circle as protection zone
+base disc can be restricted within a sector
+"""
+
 import os
 import random
 from tqdm import tqdm
