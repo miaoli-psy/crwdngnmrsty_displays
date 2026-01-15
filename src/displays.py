@@ -79,6 +79,29 @@ def generate_display_add_one_extra_discs(based_posis, percent_pairs = 1.0, add_d
         return based_posis, extra_posis
 
 
+def get_two_extra_both_ori(based_posis, radial_weight=0.25, tan_weight=0.1):
+    """
+    for each base position, get 2 extra discs
+    one from radial region: randomly choose from close-fovea or far-fovea
+    one from tangential region
+    """
+    extra_posis = []
+    for posi in based_posis:
+        #  radial extra: randomly choose close vs far
+        if random.random() < 0.5:
+            p_r = get_close_to_fovea_posi(posi, radial_weight, tan_weight)
+        else:
+            p_r = get_far_from_fovea_posi(posi, radial_weight, tan_weight)
+        extra_posis.append(polypoint_to_coords(p_r))
+
+        # tangential extra: randomly choose area a vs b
+        if random.random() < 0.5:
+            p_t = get_posi_in_tan_area_a(posi, radial_weight, tan_weight)
+        else:
+            p_t = get_posi_in_tan_area_b(posi, radial_weight, tan_weight)
+        extra_posis.append(polypoint_to_coords(p_t))
+
+    return extra_posis
 if __name__ == '__main__':
     debug = False
     savefig = True
