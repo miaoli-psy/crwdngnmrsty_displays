@@ -12,7 +12,7 @@ from src.properties import Properties
 
 
 curr_winsize = 1
-sector_angle = 170# 0-360
+sector_angle = 40# 0-360
 direction =  0 # 0-360
 fovea_radius = 100 # fovea where no disc is allowed
 circular_region_radius = 512 # circular region allowed discs
@@ -21,7 +21,7 @@ tangential_weight = 0.1
 save_to_csv = True
 savefig = True
 demo_plots = False
-run_n = 10000
+run_n = 10
 
 all_posis_Object = AllPositions_full(width = 1920, height = 1080, fovea_radius = 200, window_size = curr_winsize)
 filter_circular_posis = all_posis_Object.generate_posi_in_circle(radius = circular_region_radius)
@@ -60,7 +60,7 @@ all_display_df = pd.DataFrame(rows, columns=column_names)
 
 
 if demo_plots:
-    i = 96  # choose the row index you want to plot, it's coln-1
+    i = 0  # choose the row index you want to plot, it's coln-1
     row = all_display_df.iloc[i]
 
     base_posis = row['centralposis']
