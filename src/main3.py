@@ -6,9 +6,15 @@ from src.displays import generate_display_add_one_extra_discs, get_two_extra_pos
 from src.process_plane import get_display
 from src.properties import Properties
 
-curr_winsize = 0.4
+from src.draw_displays import drawEllipse_full, draw_disc_only
+
+curr_winsize = 0.6
 protect_zone_type = "radial"
 save_to_csv = True
+draw = False
+ka = 0.25
+kb = 0.1
+savefig = False
 
 run_n = 5
 all_posis_object = AllPositions(grid_x = 101, grid_y = 75, line_length = 10, fovea_radius = 100)
@@ -44,3 +50,8 @@ for n in range(1, run_n + 1):
 
 if save_to_csv:
     all_display_df.to_csv("ws%s_%striplets.csv" % (curr_winsize, protect_zone_type), index = False)
+
+if draw:
+    drawEllipse_full(my_display[0], extra_posis, ka=ka, kb=kb, plot_axis_limit_fixed=False,
+                     zoomin=False, savefig=savefig)
+    draw_disc_only(my_display[0], extra_posis, savefig=savefig)
